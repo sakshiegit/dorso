@@ -29,6 +29,15 @@ enum SettingsKeys {
     static let autoReturnEnabled = "autoReturnEnabled"
     static let airPodsCalibration = "airPodsCalibration"
 
+    // Light boost ("Espresso")
+    static let lightBoostEnabled = "lightBoostEnabled"
+    static let lightBoostAutoEnabled = "lightBoostAutoEnabled"
+    static let lightBoostInterval = "lightBoostInterval"
+    static let lightBoostDuration = "lightBoostDuration"
+    static let lightBoostIntensity = "lightBoostIntensity"
+    static let lightBoostCutoffHour = "lightBoostCutoffHour"
+    static let lightBoostBrightness = "lightBoostBrightness"
+
     // Legacy keys (migrated on load)
     static let legacyAirPodsProfile = "airPodsProfile"
 }

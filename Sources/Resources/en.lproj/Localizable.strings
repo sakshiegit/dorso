@@ -212,3 +212,26 @@
 // MARK: - Common
 
 "common.cancel" = "Cancel";
+
+// MARK: - Light Boost / Espresso (LightBoost.swift, MenuBar.swift, SettingsWindow.swift)
+
+"menu.espresso" = "Espresso";
+"menu.espresso.stop" = "Stop Espresso";
+"menu.espresso.late" = "Espresso (it's late)";
+"settings.section.stayAlert" = "Stay alert";
+"settings.lightBoost" = "Light boost";
+"settings.lightBoost.help" = "Washes the screen in cyan and raises brightness for a few minutes. Bright blue-cyan light is the strongest way to lift alertness without a break, and you can keep working straight through it.";
+"settings.lightBoost.auto" = "Automatic";
+"settings.lightBoost.auto.help" = "Run a boost on a timer while you're at your desk, as well as on demand from the menu bar.";
+"settings.lightBoost.interval" = "Every";
+"settings.lightBoost.interval.help" = "How long to wait after one boost ends before the next begins. The clock only runs while you're actually at your desk.";
+"settings.lightBoost.duration" = "For";
+"settings.lightBoost.duration.help" = "How long each boost lasts, including the fade in and out.";
+"settings.lightBoost.strength" = "Strength";
+"settings.lightBoost.strength.help" = "How strong the cyan wash gets at its peak. Higher is more alerting but tints your screen more.";
+"settings.lightBoost.cutoff" = "Auto stops at";
+"settings.lightBoost.cutoff.help" = "Automatic boosts stop after this hour, and fade over the hour leading up to it. The Espresso button still works at full strength any time — this only governs the timer, so it can't run bright cyan at you unattended at midnight.";
+"settings.lightBoost.brightness" = "Raise brightness";
+"settings.lightBoost.brightness.help" = "Also raise display brightness during a boost, and put it back afterwards. Unavailable in App Store builds.";
+"settings.lightBoost.minutes" = "%d min";
+"settings.lightBoost.seconds" = "%ds";

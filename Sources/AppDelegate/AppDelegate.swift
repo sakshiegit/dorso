@@ -46,6 +46,14 @@ public class AppDelegate: NSObject, NSApplicationDelegate {
 
     // Warning overlay (alternative to blur)
     var warningOverlayManager = WarningOverlayManager()
+
+    // Light boost ("Espresso"): a timed cyan wash plus a brightness bump, used
+    // to push back on the mid-session drowsiness dip. Independent of posture —
+    // it runs on a clock and on demand, not on a detector reading.
+    var lightBoostEngine = LightBoostEngine()
+    var lightBoostConfig = LightBoostConfig.default
+    let lightBoostOverlayManager = LightBoostOverlayManager()
+    let displayBrightness = DisplayBrightness()
     let settingsProfileManager = SettingsProfileManager()
     var appliedWarningColorData: Data?
 
@@ -416,13 +424,17 @@ public class AppDelegate: NSObject, NSApplicationDelegate {
             if activeWarningMode.usesWarningOverlay {
                 warningOverlayManager.setupOverlayWindows()
             }
+
+            setupLightBoostOverlay()
         }
 
         setupObservers()
+        updateLightBoostMenuItem()
 
         Timer.scheduledTimer(withTimeInterval: 0.033, repeats: true) { [weak self] _ in
             Task { @MainActor in
                 self?.updateBlur()
+                self?.tickLightBoost()
             }
         }
 
@@ -445,6 +457,12 @@ public class AppDelegate: NSObject, NSApplicationDelegate {
         Task { @MainActor in
             await self.initialSetupFlow()
         }
+    }
+
+    public func applicationWillTerminate(_ notification: Notification) {
+        // Covers every exit path the menu's Quit item doesn't: Cmd-Q, logout,
+        // a crash-free force quit. A raised brightness must not outlive the app.
+        displayBrightness.restore()
     }
 
     public func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
@@ -520,6 +538,11 @@ public class AppDelegate: NSObject, NSApplicationDelegate {
                 await self?.toggleEnabled()
             }
         }
+        menuBarManager.onToggleLightBoost = { [weak self] in
+            Task { @MainActor in
+                self?.toggleManualLightBoost()
+            }
+        }
         menuBarManager.onRecalibrate = { [weak self] in
             Task { @MainActor in
                 self?.startCalibration()
@@ -577,6 +600,8 @@ public class AppDelegate: NSObject, NSApplicationDelegate {
     private func quit() {
         cameraDetector.stop()
         airPodsDetector.stop()
+        // Brightness is the user's setting; never leave it where we put it.
+        cancelLightBoost()
         NSApplication.shared.terminate(nil)
     }
 

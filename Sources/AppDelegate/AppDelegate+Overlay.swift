@@ -54,6 +54,10 @@ extension AppDelegate {
                 syncWarningOverlaySettings()
                 warningOverlayManager.rebuildOverlayWindows()
             }
+
+            // A display coming or going invalidates the wash windows the same
+            // way it does the blur ones.
+            rebuildLightBoostOverlay()
         }
     }
 

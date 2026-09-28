@@ -35,6 +35,13 @@ extension AppDelegate {
            let data = try? JSONEncoder().encode(airPodsCalibration) {
             defaults.set(data, forKey: SettingsKeys.airPodsCalibration)
         }
+        defaults.set(lightBoostConfig.isEnabled, forKey: SettingsKeys.lightBoostEnabled)
+        defaults.set(lightBoostConfig.isAutoEnabled, forKey: SettingsKeys.lightBoostAutoEnabled)
+        defaults.set(lightBoostConfig.autoInterval, forKey: SettingsKeys.lightBoostInterval)
+        defaults.set(lightBoostConfig.duration, forKey: SettingsKeys.lightBoostDuration)
+        defaults.set(Double(lightBoostConfig.peakIntensity), forKey: SettingsKeys.lightBoostIntensity)
+        defaults.set(lightBoostConfig.cutoffHour, forKey: SettingsKeys.lightBoostCutoffHour)
+        defaults.set(lightBoostConfig.boostBrightness, forKey: SettingsKeys.lightBoostBrightness)
     }
 
     func loadSettings() {
@@ -75,6 +82,7 @@ extension AppDelegate {
            let calibration = try? JSONDecoder().decode(AirPodsCalibrationData.self, from: data) {
             airPodsCalibration = calibration
         }
+        lightBoostConfig = Self.loadLightBoostConfig(from: defaults)
         if defaults.object(forKey: SettingsKeys.toggleShortcutEnabled) != nil {
             toggleShortcutEnabled = defaults.bool(forKey: SettingsKeys.toggleShortcutEnabled)
         }
@@ -83,6 +91,37 @@ extension AppDelegate {
             let modifiers = NSEvent.ModifierFlags(rawValue: UInt(defaults.integer(forKey: SettingsKeys.toggleShortcutModifiers)))
             toggleShortcut = KeyboardShortcut(keyCode: keyCode, modifiers: modifiers)
         }
+    }
+
+    /// Reads the light boost config, falling back to the default for any key
+    /// that was never written. Always clamped: these values drive a full-screen
+    /// overlay, so a hand-edited plist must not be able to pin the screen.
+    static func loadLightBoostConfig(from defaults: UserDefaults) -> LightBoostConfig {
+        var config = LightBoostConfig.default
+
+        if defaults.object(forKey: SettingsKeys.lightBoostEnabled) != nil {
+            config.isEnabled = defaults.bool(forKey: SettingsKeys.lightBoostEnabled)
+        }
+        if defaults.object(forKey: SettingsKeys.lightBoostAutoEnabled) != nil {
+            config.isAutoEnabled = defaults.bool(forKey: SettingsKeys.lightBoostAutoEnabled)
+        }
+        if defaults.object(forKey: SettingsKeys.lightBoostInterval) != nil {
+            config.autoInterval = defaults.double(forKey: SettingsKeys.lightBoostInterval)
+        }
+        if defaults.object(forKey: SettingsKeys.lightBoostDuration) != nil {
+            config.duration = defaults.double(forKey: SettingsKeys.lightBoostDuration)
+        }
+        if defaults.object(forKey: SettingsKeys.lightBoostIntensity) != nil {
+            config.peakIntensity = CGFloat(defaults.double(forKey: SettingsKeys.lightBoostIntensity))
+        }
+        if defaults.object(forKey: SettingsKeys.lightBoostCutoffHour) != nil {
+            config.cutoffHour = defaults.integer(forKey: SettingsKeys.lightBoostCutoffHour)
+        }
+        if defaults.object(forKey: SettingsKeys.lightBoostBrightness) != nil {
+            config.boostBrightness = defaults.bool(forKey: SettingsKeys.lightBoostBrightness)
+        }
+
+        return config.clamped()
     }
 
     func saveProfile(forKey key: String, data: ProfileData) {

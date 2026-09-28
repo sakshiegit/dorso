@@ -212,3 +212,26 @@
 // MARK: - Common
 
 "common.cancel" = "Annuler";
+
+// MARK: - Light Boost / Espresso (LightBoost.swift, MenuBar.swift, SettingsWindow.swift)
+
+"menu.espresso" = "Espresso";
+"menu.espresso.stop" = "Arrêter Espresso";
+"menu.espresso.late" = "Espresso (il est tard)";
+"settings.section.stayAlert" = "Rester alerte";
+"settings.lightBoost" = "Coup de lumière";
+"settings.lightBoost.help" = "Baigne l'écran de cyan et augmente la luminosité pendant quelques minutes. La lumière bleu-cyan vive est le moyen le plus efficace de relancer la vigilance sans faire de pause, et vous pouvez continuer à travailler pendant ce temps.";
+"settings.lightBoost.auto" = "Automatique";
+"settings.lightBoost.auto.help" = "Déclenche un coup de lumière à intervalles réguliers quand vous êtes à votre bureau, en plus du déclenchement manuel depuis la barre des menus.";
+"settings.lightBoost.interval" = "Toutes les";
+"settings.lightBoost.interval.help" = "Temps d'attente entre la fin d'un coup de lumière et le début du suivant. Le compte à rebours ne tourne que lorsque vous êtes réellement à votre bureau.";
+"settings.lightBoost.duration" = "Pendant";
+"settings.lightBoost.duration.help" = "Durée de chaque coup de lumière, fondus d'entrée et de sortie compris.";
+"settings.lightBoost.strength" = "Intensité";
+"settings.lightBoost.strength.help" = "Intensité maximale du voile cyan. Plus fort réveille davantage, mais colore plus l'écran.";
+"settings.lightBoost.cutoff" = "Auto s'arrête à";
+"settings.lightBoost.cutoff.help" = "Les coups de lumière automatiques s'arrêtent après cette heure et décroissent pendant l'heure qui précède. Le bouton Espresso continue de fonctionner à pleine intensité à tout moment : ceci ne régit que la minuterie, pour éviter un cyan vif sans surveillance en pleine nuit.";
+"settings.lightBoost.brightness" = "Augmenter la luminosité";
+"settings.lightBoost.brightness.help" = "Augmente aussi la luminosité de l'écran pendant un coup de lumière, puis la rétablit. Indisponible dans les versions App Store.";
+"settings.lightBoost.minutes" = "%d min";
+"settings.lightBoost.seconds" = "%d s";

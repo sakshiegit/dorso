@@ -212,3 +212,26 @@
 // MARK: - Common
 
 "common.cancel" = "取消";
+
+// MARK: - Light Boost / Espresso (LightBoost.swift, MenuBar.swift, SettingsWindow.swift)
+
+"menu.espresso" = "浓缩咖啡";
+"menu.espresso.stop" = "停止浓缩咖啡";
+"menu.espresso.late" = "浓缩咖啡（时间已晚）";
+"settings.section.stayAlert" = "保持清醒";
+"settings.lightBoost" = "光照提神";
+"settings.lightBoost.help" = "用青色覆盖屏幕并提高亮度数分钟。明亮的蓝青色光是无需休息即可提升警觉度的最有效方式，你可以一边照射一边继续工作。";
+"settings.lightBoost.auto" = "自动";
+"settings.lightBoost.auto.help" = "除了从菜单栏手动触发外，在你伏案工作时按计时器自动运行。";
+"settings.lightBoost.interval" = "每隔";
+"settings.lightBoost.interval.help" = "一次光照结束到下一次开始之间的等待时间。计时仅在你确实在座位上时进行。";
+"settings.lightBoost.duration" = "持续";
+"settings.lightBoost.duration.help" = "每次光照的时长，包含淡入和淡出。";
+"settings.lightBoost.strength" = "强度";
+"settings.lightBoost.strength.help" = "青色覆盖在峰值时的强度。强度越高提神效果越好，但屏幕染色也越明显。";
+"settings.lightBoost.cutoff" = "自动停止于";
+"settings.lightBoost.cutoff.help" = "自动光照在此时刻之后停止，并在此前一小时内逐渐减弱。浓缩咖啡按钮任何时候都仍以全强度工作——此设置仅约束定时器，以免深夜无人时自动亮起强烈青光。";
+"settings.lightBoost.brightness" = "提高亮度";
+"settings.lightBoost.brightness.help" = "光照期间同时提高屏幕亮度，结束后恢复原值。App Store 版本不支持。";
+"settings.lightBoost.minutes" = "%d 分钟";
+"settings.lightBoost.seconds" = "%d 秒";

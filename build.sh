@@ -204,6 +204,16 @@ if [ "$APP_STORE_BUILD" = false ]; then
         "$CONTENTS/Info.plist"
 fi
 
+# Copy localization resources
+if [ -d "$SOURCES_DIR/Resources" ]; then
+    echo "Copying localization resources..."
+    for lproj in "$SOURCES_DIR/Resources"/*.lproj; do
+        if [ -d "$lproj" ]; then
+            cp -r "$lproj" "$RESOURCES_DIR/"
+        fi
+    done
+fi
+
 # Compile app icon
 # Priority: .icon file (Icon Composer) > .icns file > .iconset folder
 if [ -f "$SCRIPT_DIR/AppIcon.icon/icon.json" ]; then
@@ -231,16 +241,6 @@ if [ -d "$SOURCES_DIR/Icons" ]; then
     echo "Copying custom menu bar icons..."
     mkdir -p "$RESOURCES_DIR/Icons"
     cp "$SOURCES_DIR/Icons"/*.pdf "$RESOURCES_DIR/Icons/" 2>/dev/null || true
-fi
-
-# Copy localization resources
-if [ -d "$SOURCES_DIR/Resources" ]; then
-    echo "Copying localization resources..."
-    for lproj in "$SOURCES_DIR/Resources"/*.lproj; do
-        if [ -d "$lproj" ]; then
-            cp -r "$lproj" "$RESOURCES_DIR/"
-        fi
-    done
 fi
 
 # Embed provisioning profile for App Store builds

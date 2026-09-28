@@ -212,3 +212,26 @@
 // MARK: - Common
 
 "common.cancel" = "Abbrechen";
+
+// MARK: - Light Boost / Espresso (LightBoost.swift, MenuBar.swift, SettingsWindow.swift)
+
+"menu.espresso" = "Espresso";
+"menu.espresso.stop" = "Espresso beenden";
+"menu.espresso.late" = "Espresso (es ist spät)";
+"settings.section.stayAlert" = "Wach bleiben";
+"settings.lightBoost" = "Lichtschub";
+"settings.lightBoost.help" = "Überzieht den Bildschirm einige Minuten lang mit Cyan und erhöht die Helligkeit. Helles Blaucyan hebt die Wachheit am stärksten an, ohne dass eine Pause nötig ist – du kannst einfach weiterarbeiten.";
+"settings.lightBoost.auto" = "Automatisch";
+"settings.lightBoost.auto.help" = "Führt einen Lichtschub nach Zeitplan aus, während du am Schreibtisch bist – zusätzlich zum Abruf über die Menüleiste.";
+"settings.lightBoost.interval" = "Alle";
+"settings.lightBoost.interval.help" = "Wartezeit zwischen dem Ende eines Lichtschubs und dem Beginn des nächsten. Die Uhr läuft nur, während du wirklich am Schreibtisch bist.";
+"settings.lightBoost.duration" = "Für";
+"settings.lightBoost.duration.help" = "Dauer jedes Lichtschubs, inklusive Ein- und Ausblenden.";
+"settings.lightBoost.strength" = "Stärke";
+"settings.lightBoost.strength.help" = "Wie stark der Cyan-Überzug in der Spitze wird. Höher wirkt wacher, färbt den Bildschirm aber deutlicher.";
+"settings.lightBoost.cutoff" = "Auto endet um";
+"settings.lightBoost.cutoff.help" = "Automatische Lichtschübe enden nach dieser Uhrzeit und klingen in der Stunde davor ab. Der Espresso-Button funktioniert weiterhin jederzeit mit voller Stärke – dies steuert nur den Timer, damit nachts nicht unbeaufsichtigt helles Cyan läuft.";
+"settings.lightBoost.brightness" = "Helligkeit erhöhen";
+"settings.lightBoost.brightness.help" = "Erhöht während eines Lichtschubs auch die Bildschirmhelligkeit und setzt sie danach zurück. In App-Store-Versionen nicht verfügbar.";
+"settings.lightBoost.minutes" = "%d Min.";
+"settings.lightBoost.seconds" = "%d s";

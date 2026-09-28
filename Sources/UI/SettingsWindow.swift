@@ -32,6 +32,13 @@ struct SettingsView: View {
     #endif
     @State private var toggleShortcutEnabled: Bool
     @State private var toggleShortcut: KeyboardShortcut
+    @State private var lightBoostEnabled: Bool
+    @State private var lightBoostAuto: Bool
+    @State private var lightBoostIntervalMinutes: Double
+    @State private var lightBoostDurationSeconds: Double
+    @State private var lightBoostStrength: Double
+    @State private var lightBoostCutoffHour: Double
+    @State private var lightBoostBrightness: Bool
     @State private var detectionModeSlider: Double
     @State private var trackingSource: TrackingSource
     @State private var trackingModeSelection: TrackingMode
@@ -102,6 +109,14 @@ struct SettingsView: View {
         #endif
         _toggleShortcutEnabled = State(initialValue: appDelegate.toggleShortcutEnabled)
         _toggleShortcut = State(initialValue: appDelegate.toggleShortcut)
+        let lightBoost = appDelegate.lightBoostConfig
+        _lightBoostEnabled = State(initialValue: lightBoost.isEnabled)
+        _lightBoostAuto = State(initialValue: lightBoost.isAutoEnabled)
+        _lightBoostIntervalMinutes = State(initialValue: (lightBoost.autoInterval / 60).rounded())
+        _lightBoostDurationSeconds = State(initialValue: lightBoost.duration)
+        _lightBoostStrength = State(initialValue: Double(lightBoost.peakIntensity))
+        _lightBoostCutoffHour = State(initialValue: Double(lightBoost.cutoffHour))
+        _lightBoostBrightness = State(initialValue: lightBoost.boostBrightness)
         _detectionModeSlider = State(initialValue: Double(detectionModes.firstIndex(of: profileDetectionMode) ?? 0))
         _trackingSource = State(initialValue: appDelegate.trackingSource)
         _trackingModeSelection = State(initialValue: appDelegate.trackingStore.withState { $0.trackingMode })
@@ -474,6 +489,88 @@ struct SettingsView: View {
                 }
             }
 
+            // Stay alert card: the light boost. Unlike the posture warning
+            // this isn't driven by a detector — it runs on a clock and on
+            // demand, so it lives in its own card rather than under response.
+            SettingsCard(
+                icon: "sun.max",
+                title: L("settings.section.stayAlert"),
+                helpText: L("settings.lightBoost.help"),
+                trailing: {
+                    BrandSwitch(isOn: $lightBoostEnabled)
+                        .onChange(of: lightBoostEnabled) { _ in pushLightBoostConfig() }
+                },
+                content: {
+                    VStack(spacing: 6) {
+                        HStack(spacing: 0) {
+                            CompactToggle(
+                                title: L("settings.lightBoost.auto"),
+                                helpText: L("settings.lightBoost.auto.help"),
+                                isOn: $lightBoostAuto,
+                                isDisabled: !lightBoostEnabled
+                            )
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .onChange(of: lightBoostAuto) { _ in pushLightBoostConfig() }
+
+                            CompactToggle(
+                                title: L("settings.lightBoost.brightness"),
+                                helpText: L("settings.lightBoost.brightness.help"),
+                                isOn: $lightBoostBrightness,
+                                // Needs private APIs that App Store builds
+                                // compile out; the wash still works without it
+                                isDisabled: !lightBoostEnabled || !appDelegate.displayBrightness.isSupported
+                            )
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .onChange(of: lightBoostBrightness) { _ in pushLightBoostConfig() }
+                        }
+
+                        if lightBoostEnabled {
+                            if lightBoostAuto {
+                                CompactSlider(
+                                    title: L("settings.lightBoost.interval"),
+                                    helpText: L("settings.lightBoost.interval.help"),
+                                    value: $lightBoostIntervalMinutes,
+                                    range: 5...60,
+                                    step: 5,
+                                    valueLabel: L("settings.lightBoost.minutes", Int(lightBoostIntervalMinutes))
+                                )
+                                .onChange(of: lightBoostIntervalMinutes) { _ in pushLightBoostConfig() }
+                            }
+
+                            CompactSlider(
+                                title: L("settings.lightBoost.duration"),
+                                helpText: L("settings.lightBoost.duration.help"),
+                                value: $lightBoostDurationSeconds,
+                                range: 30...300,
+                                step: 30,
+                                valueLabel: Self.durationLabel(seconds: lightBoostDurationSeconds)
+                            )
+                            .onChange(of: lightBoostDurationSeconds) { _ in pushLightBoostConfig() }
+
+                            CompactSlider(
+                                title: L("settings.lightBoost.strength"),
+                                helpText: L("settings.lightBoost.strength.help"),
+                                value: $lightBoostStrength,
+                                range: 0.02...0.45,
+                                step: 0.01,
+                                valueLabel: "\(Int((lightBoostStrength * 100).rounded()))%"
+                            )
+                            .onChange(of: lightBoostStrength) { _ in pushLightBoostConfig() }
+
+                            CompactSlider(
+                                title: L("settings.lightBoost.cutoff"),
+                                helpText: L("settings.lightBoost.cutoff.help"),
+                                value: $lightBoostCutoffHour,
+                                range: 12...23,
+                                step: 1,
+                                valueLabel: Self.hourLabel(Int(lightBoostCutoffHour))
+                            )
+                            .onChange(of: lightBoostCutoffHour) { _ in pushLightBoostConfig() }
+                        }
+                    }
+                }
+            )
+
             // Behavior card: appearance in the header (matching the other
             // cards' header-control pattern), app-level toggles below
             SettingsCard(icon: "switch.2", title: L("settings.section.behavior")) {
@@ -712,6 +809,46 @@ struct SettingsView: View {
 
     private static func closestIndex(for value: Double, in values: [Double]) -> Int {
         values.enumerated().min(by: { abs($0.element - value) < abs($1.element - value) })?.offset ?? 0
+    }
+
+    // MARK: - Light Boost
+
+    /// Pushes every light boost control into the app in one go. The engine
+    /// clamps what it receives, so a single funnel keeps the sliders and the
+    /// running boost from drifting apart.
+    private func pushLightBoostConfig() {
+        var config = appDelegate.lightBoostConfig
+        config.isEnabled = lightBoostEnabled
+        config.isAutoEnabled = lightBoostAuto
+        config.autoInterval = lightBoostIntervalMinutes * 60
+        config.duration = lightBoostDurationSeconds
+        config.peakIntensity = CGFloat(lightBoostStrength)
+        config.cutoffHour = Int(lightBoostCutoffHour)
+        config.boostBrightness = lightBoostBrightness
+        appDelegate.applyLightBoostConfig(config)
+    }
+
+    private static func durationLabel(seconds: Double) -> String {
+        let whole = Int(seconds.rounded())
+        guard whole >= 60, whole % 60 == 0 else { return L("settings.lightBoost.seconds", whole) }
+        return L("settings.lightBoost.minutes", whole / 60)
+    }
+
+    /// Formats an hour the way the user's locale writes clock times, so this
+    /// reads "8 PM" or "20" rather than a hardcoded guess at either.
+    private static func hourLabel(_ hour: Int) -> String {
+        var components = DateComponents()
+        components.year = 2000
+        components.month = 1
+        components.day = 1
+        components.hour = hour
+
+        guard let date = Calendar.current.date(from: components) else { return "\(hour):00" }
+
+        let formatter = DateFormatter()
+        formatter.locale = Locale.current
+        formatter.setLocalizedDateFormatFromTemplate("j")
+        return formatter.string(from: date)
     }
 
     private func handleProfileSelectionChange(_ newValue: String) {

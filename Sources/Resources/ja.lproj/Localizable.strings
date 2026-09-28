@@ -212,3 +212,26 @@
 // MARK: - Common
 
 "common.cancel" = "キャンセル";
+
+// MARK: - Light Boost / Espresso (LightBoost.swift, MenuBar.swift, SettingsWindow.swift)
+
+"menu.espresso" = "エスプレッソ";
+"menu.espresso.stop" = "エスプレッソを停止";
+"menu.espresso.late" = "エスプレッソ（もう遅い時間です）";
+"settings.section.stayAlert" = "覚醒を保つ";
+"settings.lightBoost" = "ライトブースト";
+"settings.lightBoost.help" = "画面を数分間シアンで覆い、明るさを上げます。明るい青シアンの光は休憩なしで覚醒度を高める最も効果的な方法で、そのまま作業を続けられます。";
+"settings.lightBoost.auto" = "自動";
+"settings.lightBoost.auto.help" = "メニューバーからの手動実行に加えて、デスクにいる間はタイマーでブーストを実行します。";
+"settings.lightBoost.interval" = "間隔";
+"settings.lightBoost.interval.help" = "1回のブーストが終わってから次が始まるまでの待ち時間。タイマーは実際にデスクにいる間だけ進みます。";
+"settings.lightBoost.duration" = "継続時間";
+"settings.lightBoost.duration.help" = "フェードイン・フェードアウトを含む、1回のブーストの長さ。";
+"settings.lightBoost.strength" = "強さ";
+"settings.lightBoost.strength.help" = "シアンのピーク時の強さ。強いほど覚醒効果は高まりますが、画面の色みも強くなります。";
+"settings.lightBoost.cutoff" = "自動停止";
+"settings.lightBoost.cutoff.help" = "自動のブーストはこの時刻以降は停止し、直前の1時間で弱まります。エスプレッソボタンはいつでもフル強度で使えます。これはタイマーのみを制御し、深夜に無人で明るいシアンが点くのを防ぎます。";
+"settings.lightBoost.brightness" = "明るさを上げる";
+"settings.lightBoost.brightness.help" = "ブースト中はディスプレイの明るさも上げ、終了後に元へ戻します。App Store 版では利用できません。";
+"settings.lightBoost.minutes" = "%d分";
+"settings.lightBoost.seconds" = "%d秒";

@@ -212,3 +212,26 @@
 // MARK: - Common
 
 "common.cancel" = "Cancelar";
+
+// MARK: - Light Boost / Espresso (LightBoost.swift, MenuBar.swift, SettingsWindow.swift)
+
+"menu.espresso" = "Espresso";
+"menu.espresso.stop" = "Detener Espresso";
+"menu.espresso.late" = "Espresso (es tarde)";
+"settings.section.stayAlert" = "Mantente alerta";
+"settings.lightBoost" = "Impulso de luz";
+"settings.lightBoost.help" = "Baña la pantalla en cian y sube el brillo durante unos minutos. La luz azul-cian intensa es la forma más eficaz de aumentar el estado de alerta sin parar, y puedes seguir trabajando mientras dura.";
+"settings.lightBoost.auto" = "Automático";
+"settings.lightBoost.auto.help" = "Ejecuta un impulso con temporizador mientras estás en tu escritorio, además de a demanda desde la barra de menús.";
+"settings.lightBoost.interval" = "Cada";
+"settings.lightBoost.interval.help" = "Cuánto esperar entre el final de un impulso y el inicio del siguiente. El reloj solo corre mientras estás realmente en tu escritorio.";
+"settings.lightBoost.duration" = "Durante";
+"settings.lightBoost.duration.help" = "Cuánto dura cada impulso, incluidas la entrada y la salida graduales.";
+"settings.lightBoost.strength" = "Intensidad";
+"settings.lightBoost.strength.help" = "Cuánta fuerza alcanza el baño de cian en su punto máximo. Más intensidad despierta más, pero tiñe más la pantalla.";
+"settings.lightBoost.cutoff" = "Auto termina a las";
+"settings.lightBoost.cutoff.help" = "Los impulsos automáticos se detienen después de esta hora y decaen durante la hora previa. El botón Espresso sigue funcionando a plena intensidad en cualquier momento: esto solo controla el temporizador, para que no se active cian intenso sin supervisión de madrugada.";
+"settings.lightBoost.brightness" = "Subir el brillo";
+"settings.lightBoost.brightness.help" = "Sube también el brillo de la pantalla durante un impulso y lo restaura al terminar. No disponible en versiones de la App Store.";
+"settings.lightBoost.minutes" = "%d min";
+"settings.lightBoost.seconds" = "%d s";

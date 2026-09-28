@@ -8,10 +8,19 @@ final class MenuBarManager {
     private var statusMenuItem: NSMenuItem!
     private var enabledMenuItem: NSMenuItem!
     private var recalibrateMenuItem: NSMenuItem!
+    private var espressoMenuItem: NSMenuItem!
+
+    private struct LightBoostMenuState: Equatable {
+        let isBoosting: Bool
+        let isEnabled: Bool
+        let isLate: Bool
+    }
+    private var lastLightBoostState: LightBoostMenuState?
 
     // Callbacks
     var onToggleEnabled: (() -> Void)?
     var onRecalibrate: (() -> Void)?
+    var onToggleLightBoost: (() -> Void)?
     var onShowAnalytics: (() -> Void)?
     var onOpenSettings: (() -> Void)?
     var onOpenSupport: (() -> Void)?
@@ -36,6 +45,11 @@ final class MenuBarManager {
     @discardableResult
     func makeMenu() -> NSMenu {
         let menu = NSMenu()
+        // Without this, AppKit re-enables every item whose target implements
+        // its action just before the menu draws, overriding the isEnabled we
+        // set in the update methods below. A disabled item would still render
+        // -- and behave -- as if it were live.
+        menu.autoenablesItems = false
 
         // Status
         statusMenuItem = NSMenuItem(title: L("menu.status.starting"), action: nil, keyEquivalent: "")
@@ -54,6 +68,14 @@ final class MenuBarManager {
         recalibrateMenuItem = NSMenuItem(title: L("menu.recalibrate"), action: #selector(handleRecalibrate), keyEquivalent: "r")
         recalibrateMenuItem.target = self
         menu.addItem(recalibrateMenuItem)
+
+        // Espresso: an on-demand light boost. Sits with the other "do
+        // something now" actions because the user reaches for it exactly when
+        // they feel themselves fading — it must be two clicks, not five.
+        espressoMenuItem = NSMenuItem(title: L("menu.espresso"), action: #selector(handleToggleLightBoost), keyEquivalent: "e")
+        espressoMenuItem.target = self
+        espressoMenuItem.image = NSImage(systemSymbolName: "cup.and.saucer", accessibilityDescription: L("menu.espresso"))
+        menu.addItem(espressoMenuItem)
 
         menu.addItem(NSMenuItem.separator())
 
@@ -114,6 +136,33 @@ final class MenuBarManager {
         recalibrateMenuItem.isEnabled = enabled
     }
 
+    /// Flips the item between start and stop, and adds a quiet "it's late" note
+    /// once the automatic schedule has stopped for the day.
+    ///
+    /// The note is a hint, not a refusal: the button still works at full
+    /// strength after the cutoff. It's there so a late boost is a decision
+    /// rather than an accident.
+    ///
+    /// Called every tick, so it early-outs unless something actually changed.
+    func updateLightBoost(isBoosting: Bool, isEnabled: Bool, isLate: Bool) {
+        guard isSetUp else { return }
+
+        let state = LightBoostMenuState(isBoosting: isBoosting, isEnabled: isEnabled, isLate: isLate)
+        guard state != lastLightBoostState else { return }
+        lastLightBoostState = state
+
+        if isBoosting {
+            espressoMenuItem.title = L("menu.espresso.stop")
+        } else {
+            espressoMenuItem.title = isLate ? L("menu.espresso.late") : L("menu.espresso")
+        }
+        espressoMenuItem.image = NSImage(
+            systemSymbolName: isBoosting ? "cup.and.saucer.fill" : "cup.and.saucer",
+            accessibilityDescription: espressoMenuItem.title
+        )
+        espressoMenuItem.isEnabled = isEnabled || isBoosting
+    }
+
     func updateShortcut(enabled: Bool, shortcut: KeyboardShortcut) {
         guard isSetUp else { return }
         if enabled {
@@ -133,6 +182,10 @@ final class MenuBarManager {
 
     @objc private func handleRecalibrate() {
         onRecalibrate?()
+    }
+
+    @objc private func handleToggleLightBoost() {
+        onToggleLightBoost?()
     }
 
     @objc private func handleShowAnalytics() {
